@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require "smoke_tests/workers/main"
+require 'smoke_tests/configuration/parser'
+
+SmokeTests::Configuration::Parser.parse(ARGV)
+SmokeTests::Workers::Main.start

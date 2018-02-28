@@ -22,7 +22,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You can run gem directly from command line, see usage first :
+
+    $ smoke_tests -h
+
+## Embedding in ruby apps
+
+You can start suite by doing executing `SmokeTests::Workers::Main.start` which will start suite with default configuration. However if you want to customize
+configuration you have to pass in the configuration arguments for ex set number of `max_concurrency`. You have to set configuration before starting main worker. Here is an example `SmokeTests::Configuration::Parser.parse(['--max_concurrency', '55'])`
 
 ## Development
 
@@ -38,4 +45,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
