@@ -1,4 +1,5 @@
 require 'json'
+require 'smoke_tests/configuration/base'
 
 module SmokeTests
   module Tariff
@@ -6,7 +7,8 @@ module SmokeTests
     class UrlCollector
       def self.urls
         list_of_urls = []
-        base_url = 'http://localhost:3000/trade-tariff/headings'
+        base_url = "#{SmokeTests::Configuration::Base.environment_url}/trade-tariff/headings"
+        
         # will replace with real http call, it takes too long at this stage
         file = File.read('lib/section_tree.json')
         sections = JSON.parse(file)

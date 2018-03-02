@@ -8,7 +8,8 @@ module SmokeTests
     class Main
       def self.start
         puts 'Using following configuration'
-        puts SmokeTests::Configuration::Base.to_hash
+        puts SmokeTests::Tariff::UrlCollector.urls
+        exit
 
         ::Typhoeus::Config.memoize = false
         hydra = Typhoeus::Hydra.new(max_concurrency: SmokeTests::Configuration::Base.max_concurrency)
