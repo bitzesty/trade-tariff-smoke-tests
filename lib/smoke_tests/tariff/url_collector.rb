@@ -30,6 +30,7 @@ module SmokeTests
             puts "Fetching commodities from #{url}"
             request = ::Typhoeus::Request.new(url, followlocation: true)
             request.on_complete do |response|
+              puts '-----------------------------------------------------------------------------------------------'.colorize(:blue)
               if response.success?
                 fetch_commodities(response.body).each do |goods_nomenclature_item_id|
                   commodity_url = "#{commodity_endpoint}/#{goods_nomenclature_item_id}.json"
@@ -42,7 +43,7 @@ module SmokeTests
                   url,
                   'response timed out'
                 )
-                puts("got a time out")
+                puts "got a time out".colorize(:red)
               elsif response.code == 0
                 SmokeTests::Storage::Client.save_failure(
                   'Collecting commodities from heading tree',
@@ -50,15 +51,15 @@ module SmokeTests
                   "Could not get an http response, something's wrong",
                   response.return_message
                 )
-                puts(response.return_message)
+                puts response.return_message.colorize(:red)
               else
                 SmokeTests::Storage::Client.save_failure(
                   'Collecting commodities from heading tree',
                   url,
-                  "HTTP request failed: " + response.code.to_s
+                  "HTTP request failed: #{response.code.to_s}"
                 )
                 # Received a non-successful http response. /headings/0511000000/tree
-                puts("HTTP request failed: " + response.code.to_s)
+                puts "HTTP request failed: #{response.code.to_s}".colorize(:red)
               end
             end
             hydra.queue(request)

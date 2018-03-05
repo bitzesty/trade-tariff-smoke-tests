@@ -7,6 +7,11 @@ module SmokeTests
     class Client
       KEY_NAMESPACE = 'smoke_tests'
 
+      def self.reset
+        keys = Redis.current.keys "#{KEY_NAMESPACE}*"
+        Redis.current.del(*keys) unless keys.empty?
+      end
+
       def self.save_success
         # To be implemented
       end
