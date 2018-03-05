@@ -6,10 +6,22 @@ module SmokeTests
     # Defines the available configuration options for the configuration
     ConfigurationStruct = Struct.new(:max_concurrency, :list_of_urls, :verbose, :environment)
     ENVIRONMENTS = {
-      local: 'http://localhost:3000',
-      dev: 'https://dev.trade-tariff.service.gov.uk',
-      staging: 'https://staging.trade-tariff.service.gov.uk',
-      production: 'https://www.trade-tariff.service.gov.uk'
+      local: {
+        'front-end' => 'http://localhost:3000',
+        'back-end' => 'http://localhost:3018'
+      },
+      dev: {
+        'front-end' => 'https://dev.trade-tariff.service.gov.uk',
+        'back-end' => 'https://tariff-backend-dev.cloudapps.digital'
+      },
+      staging: {
+        'front-end' => 'https://staging.trade-tariff.service.gov.uk',
+        'back-end' => ''
+      },
+      production: {
+        'front-end' => 'https://www.trade-tariff.service.gov.uk',
+        'back-end' => ''
+      }
     }
 
     class Base
@@ -29,8 +41,12 @@ module SmokeTests
         @@config
       end
 
-      def self.environment_url
-        SmokeTests::Configuration::ENVIRONMENTS[@@config.environment]
+      def self.be_environment_url
+        SmokeTests::Configuration::ENVIRONMENTS.dig(@@config.environment, 'back-end')
+      end
+
+      def self.fe_environment_url
+        SmokeTests::Configuration::ENVIRONMENTS.dig(@@config.environment, 'front-end')
       end
 
       # This provides an easy way to dump the configuration as a hash

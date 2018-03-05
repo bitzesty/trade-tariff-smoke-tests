@@ -7,7 +7,7 @@ module SmokeTests
   module Workers
     class Main
       def self.start
-        puts 'Using following configuration'
+        puts 'Using following configuration'.colorize(:green)
         puts SmokeTests::Tariff::UrlCollector.urls
         exit
 
