@@ -1,6 +1,7 @@
 require 'json'
-require 'smoke_tests/configuration/base'
 require 'colorize'
+require 'smoke_tests/configuration/base'
+require 'smoke_tests/storage/client'
 
 module SmokeTests
   module Tariff
@@ -33,15 +34,29 @@ module SmokeTests
                 fetch_commodities(response.body).each do |goods_nomenclature_item_id|
                   commodity_url = "#{commodity_endpoint}/#{goods_nomenclature_item_id}.json"
                   puts "Adding commodity #{commodity_url} to list of urls"
-                  list_of_urls << commodity_url
+                  list_of_urls << commodity_url # maybe this becomes a memory bloat
                 end
               elsif response.timed_out?
-                # aw hell no
+                SmokeTests::Storage::Client.save_failure(
+                  'Collecting commodities from heading tree',
+                  url,
+                  'response timed out'
+                )
                 puts("got a time out")
               elsif response.code == 0
-                # Could not get an http response, something's wrong.
+                SmokeTests::Storage::Client.save_failure(
+                  'Collecting commodities from heading tree',
+                  url,
+                  "Could not get an http response, something's wrong",
+                  response.return_message
+                )
                 puts(response.return_message)
               else
+                SmokeTests::Storage::Client.save_failure(
+                  'Collecting commodities from heading tree',
+                  url,
+                  "HTTP request failed: " + response.code.to_s
+                )
                 # Received a non-successful http response. /headings/0511000000/tree
                 puts("HTTP request failed: " + response.code.to_s)
               end
@@ -57,7 +72,7 @@ module SmokeTests
         def fetch_commodities(response_body)
           response = JSON.parse(response_body)
           commodities = response['commodities']
-          return if commodities.nil?
+          return [] if commodities.nil?
           commodities.map(&:values).flatten
         end
 
