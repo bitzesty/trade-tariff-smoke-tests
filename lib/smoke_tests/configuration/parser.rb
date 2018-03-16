@@ -9,6 +9,10 @@ module SmokeTests
           parser.separator ""
           parser.separator "Specific options:"
 
+          parser.on("-e", "--environment ENVIRONMENT", [:local, :dev, :staging, :production], "This field requires one of a set of predefined values be set", "valid arguments are [local dev staging production]") do |setting|
+            Base.environment = setting
+          end
+
           parser.on("-l", "--list x,y", Array, "This command flag takes a comma separated list of urls(without", "spaces) This requires at least one argument.") do |setting|
             puts 'Not yet implemented'
             exit
@@ -16,7 +20,7 @@ module SmokeTests
           end
 
           parser.on("--[no-]verbose", "This is a common boolean flag, setting verbosity to either", "true or false.") do |setting|
-            Configuration.verbose = setting
+            Base.verbose = setting
           end
 
           parser.on('-m', "--max_concurrency NUM", Integer, "Set the number of concurrent requests.") do |setting|
@@ -32,7 +36,7 @@ module SmokeTests
               |   _  <  |  |     |  |        /  /    |   __|      \   \        |  |       \_    _/
               |  |_)  | |  |     |  |       /  /----.|  |____ .----)   |       |  |         |  |
               |______/  |__|     |__|      /________||_______||_______/        |__|         |__|
-                                                                                                   
+
 
             EOF
             puts parser.help
